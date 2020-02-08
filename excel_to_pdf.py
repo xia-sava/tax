@@ -1,3 +1,4 @@
+from glob import iglob
 from pathlib import Path
 import sys
 
@@ -9,21 +10,22 @@ def main():
     excel.Visible = False
 
     try:
-        for wb_name in sys.argv[1:]:  # type: str
-            print(f'Processing: {wb_name}')
-            wb_name = wb_name.replace('\\\\', '\\').replace('/', '\\')
-            wb_path = Path(wb_name).absolute()
-            pdf_path = Path(wb_name.replace('xlsx', 'pdf')).absolute()
-            if pdf_path.exists():
-                pdf_path.unlink()
+        for arg in sys.argv[1:]:
+            for wb_name in iglob(arg):  # type: str
+                print(f'Processing: {wb_name}')
+                wb_name = wb_name.replace('\\\\', '\\').replace('/', '\\')
+                wb_path = Path(wb_name).absolute()
+                pdf_path = Path(wb_name.replace('xlsx', 'pdf')).absolute()
+                if pdf_path.exists():
+                    pdf_path.unlink()
 
-            wb = excel.Workbooks.Open(str(wb_path))
-            try:
-                wb.WorkSheets(1).Select()
-                wb.ActiveSheet.ExportAsFixedFormat(0, str(pdf_path))
-            finally:
-                wb.Close(True)
-                wb = None
+                wb = excel.Workbooks.Open(str(wb_path))
+                try:
+                    wb.WorkSheets(1).Select()
+                    wb.ActiveSheet.ExportAsFixedFormat(0, str(pdf_path))
+                finally:
+                    wb.Close(True)
+                    wb = None
     finally:
         excel.Quit()
         excel = None
