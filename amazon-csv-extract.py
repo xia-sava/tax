@@ -4,26 +4,32 @@ from datetime import datetime
 from pathlib import Path
 from typing import List
 
+# language=markdown
 """
+1. Amazon履歴フィルタでクレカ請求に入ってきてそうな月の範囲を CSV 出力して c:/tmp/A に配置
+2. クレカ各月の最初の Amazon 請求の日を調べて m_range に設定 ← 各月 1日固定でよくなってる気がする
+3. 出力された extracted_all.csv を見てこれはちゃうやろってのを excluded_order に並べて繰り返す
+4. 注文履歴フィルタを全月分にして criteria.txt の1行ずつで絞り込み，領収証を PDF 出力する
+5. 年初の注文分は年を跨ぐので前年分も出すこと
 """
 
 
 def main():
-    credit_card_last4s = ['5189', '2600']
+    credit_card_last4s = ['2600']
     m_range = [
-        datetime(2018, 11,  7),  # 1月
-        datetime(2018, 12,  9),  # 2月
-        datetime(2019,  1,  8),  # 3月
-        datetime(2019,  2, 12),  # 4月
-        datetime(2019,  3,  9),  # 5月
-        datetime(2019,  4,  6),  # 6月
-        datetime(2019,  5,  8),  # 7月
-        datetime(2019,  6, 12),  # 8月
-        datetime(2019,  8,  9),  # 9月
-        datetime(2019,  9,  1),  # 10月
-        datetime(2019, 10,  3),  # 11月
-        datetime(2019, 11,  3),  # 12月
-        datetime(2019, 11, 29),  # 最後尾の次の日
+        datetime(2020, 12, 5),  # 1月
+        datetime(2021, 1, 6),  # 2月
+        datetime(2021, 2, 7),  # 3月
+        datetime(2021, 3, 1),  # 4月
+        datetime(2021, 4, 8),  # 5月
+        datetime(2021, 5, 2),  # 6月
+        datetime(2021, 6, 4),  # 7月
+        datetime(2021, 7, 1),  # 8月
+        datetime(2021, 8, 2),  # 9月
+        datetime(2021, 9, 1),  # 10月
+        datetime(2021, 10, 3),  # 11月
+        datetime(2021, 11, 3),  # 12月
+        datetime(2021, 12, 5),  # 最後尾の次の日
     ]
     excluded_order = [
     ]
