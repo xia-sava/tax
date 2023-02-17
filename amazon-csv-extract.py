@@ -2,45 +2,30 @@ import csv
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import List
 
 # language=markdown
 """
 1. Amazon履歴フィルタでクレカ請求に入ってきてそうな月の範囲を CSV 出力して c:/tmp/A に配置
-2. クレカ各月の最初の Amazon 請求の日を調べて m_range に設定 ← 各月 1日固定でよくなってる気がする
-3. 出力された extracted_all.csv を見てこれはちゃうやろってのを excluded_order に並べて繰り返す
-4. 注文履歴フィルタを全月分にして criteria.txt の1行ずつで絞り込み，領収証を PDF 出力する
-5. 年初の注文分は年を跨ぐので前年分も出すこと
+2. 出力された extracted_all.csv を見てこれはちゃうやろってのを excluded_order に並べて繰り返す
+3. 注文履歴フィルタを全月分にして criteria.txt の1行ずつで絞り込み，領収証を PDF 出力する
+4. 年初の注文分は年を跨ぐので前年分も出すこと
 """
 
 
 def main():
     credit_card_last4s = ['2600']
-    m_range = [
-        datetime(2020, 12, 5),  # 1月
-        datetime(2021, 1, 6),  # 2月
-        datetime(2021, 2, 7),  # 3月
-        datetime(2021, 3, 1),  # 4月
-        datetime(2021, 4, 8),  # 5月
-        datetime(2021, 5, 2),  # 6月
-        datetime(2021, 6, 4),  # 7月
-        datetime(2021, 7, 1),  # 8月
-        datetime(2021, 8, 2),  # 9月
-        datetime(2021, 9, 1),  # 10月
-        datetime(2021, 10, 3),  # 11月
-        datetime(2021, 11, 3),  # 12月
-        datetime(2021, 12, 5),  # 最後尾の次の日
-    ]
+    year = datetime.now().year
+    m_range = [datetime(year - 2, 12, 1)] + [datetime(year - 1, m, 1) for m in range(1, 13)]
     excluded_order = [
     ]
 
     data_dir = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
-    data = [[] for i in range(12)]
+    data = [[] for _ in range(12)]
     for csvfile in sorted(data_dir.glob('amazon-order_*.csv')):
         with open(csvfile, 'r', encoding='utf-8') as w_month:
             reader = csv.reader(w_month)
             header = next(reader)
-            incomp_data = []  # type: List[List]
+            incomp_data: list[list] = []
             for row in reader:
                 order_no = row[1]
                 name = row[2]
