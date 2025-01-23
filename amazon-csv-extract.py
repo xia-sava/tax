@@ -15,8 +15,10 @@ from pathlib import Path
 def main():
     credit_card_last4s = ['2600']
     year = datetime.now().year
-    m_range = [datetime(year - 2, 12, 1)] + [datetime(year - 1, m, 1) for m in range(1, 13)]
+    m_range = [datetime(year - 2, 12, 4)] + [datetime(year - 1, m, 1) for m in range(1, 13)]
     excluded_order = [
+        "503-5028732-6403838",
+        "503-6473318-0367046",
     ]
 
     data_dir = Path(sys.argv[1] if len(sys.argv) > 1 else '.')
